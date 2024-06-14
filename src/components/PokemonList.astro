@@ -1,0 +1,179 @@
+---
+// src/pages/index.astro
+
+interface Pokemon {
+  name: string;
+  url: string;
+}
+
+interface PokemonResponse {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: Pokemon[];
+}
+
+interface PokemonType {
+  type: {
+    name: string;
+  };
+}
+
+function extractIdFromUrl(url: string): number {
+  const match = url.match(/\/(\d+)\/$/);
+  return match ? parseInt(match[1], 10) : NaN;
+}
+
+async function fetchPokemonList(): Promise<PokemonResponse> {
+  const response = await fetch("https://pokeapi.co/api/v2/pokemon/");
+  const data: PokemonResponse = await response.json();
+  return data;
+}
+
+async function fetchPokemonTypes(id: number): Promise<PokemonType[]> {
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+  const data = await response.json();
+  return data.types;
+}
+
+const pokemonResponse: PokemonResponse = await fetchPokemonList();
+const pokemonData: Pokemon[] = pokemonResponse.results;
+
+async function getPokemonTypes(pokemon: Pokemon): Promise<string[]> {
+  const id = extractIdFromUrl(pokemon.url);
+  const types: PokemonType[] = await fetchPokemonTypes(id);
+  return types.map((type) => type.type.name);
+}
+
+const types: { [key: string]: { class: string; name: string } } = {
+  fire: {
+    class: "bg-[#fd7d24] text-white",
+    name: "Fuego",
+  },
+  water: {
+    class: "bg-[#4592c4] text-white",
+    name: "Agua",
+  },
+  grass: {
+    class: "bg-[#9bcc50] text-slate-800",
+    name: "Planta",
+  },
+  electric: {
+    class: "bg-[#eed535] text-slate-800",
+    name: "Eléctrico",
+  },
+  dragon: {
+    class:
+      "bg-gradient-to-b from-[#53a4cf_50%] to-[#f16e57_50%] bg-[#53a4cf] text-white",
+    name: "Dragón",
+  },
+  poison: {
+    class: "bg-[#b97fc9] text-white",
+    name: "Veneno",
+  },
+  flying: {
+    class:
+      "bg-gradient-to-b from-[#3dc7ef_50%] to-[#bdb9b8_50%] bg-[#3dc7ef] text-slate-800",
+    name: "Volador",
+  },
+  bug: {
+    class: "bg-[#729f3f] text-white",
+    name: "Bicho",
+  },
+  normal: {
+    class: "bg-[#a4acaf] text-slate-800",
+    name: "Normal",
+  },
+  fighting: {
+    class: "bg-[#d56723] text-white",
+    name: "Lucha",
+  },
+  ground: {
+    class:
+      "bg-gradient-to-b from-[#f7de3f_50%] to-[#ab9842_50%] bg-[#f7de3f] text-slate-800",
+    name: "Tierra",
+  },
+  rock: {
+    class: "bg-[#a38c21] text-white",
+    name: "Roca",
+  },
+  ghost: {
+    class: "bg-[#7b62a3] text-white",
+    name: "Fantasma",
+  },
+  steel: {
+    class: "bg-[#9eb7b8] text-slate-800",
+    name: "Acero",
+  },
+  psychic: {
+    class: "bg-[#f366b9] text-white",
+    name: "Psíquico",
+  },
+  ice: {
+    class: "bg-[#51c4e7] text-slate-800",
+    name: "Hielo",
+  },
+  dark: {
+    class: "bg-[#707070] text-white",
+    name: "Siniestro",
+  },
+  fairy: {
+    class: "bg-[#fdb9e9] text-slate-800",
+    name: "Hada",
+  },
+};
+
+function getPillClass(type: string): { class: string; name: string } {
+  return types[type] || { class: "", name: "" };
+}
+---
+
+<section
+  class="flex flex-wrap gap-x-8 gap-y-12 justify-center my-6 px-20 animate-fade-up animate-duration-1000 animate-delay-500 animate-ease-in-out"
+>
+  {
+    pokemonData.length > 0 ? (
+      await Promise.all(
+        pokemonData.map(async (pokemon) => {
+          const pokemonTypes = await getPokemonTypes(pokemon);
+          return (
+            <article class="transition hover:rotate-3 hover:scale-105 cursor-pointer">
+              <picture class="flex bg-slate-400 dark:bg-slate-800 p-4 rounded-md">
+                <img
+                  aria-hidden="true"
+                  loading="lazy"
+                  class="size-52 bg-slate-400 dark:bg-slate-800"
+                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${extractIdFromUrl(pokemon.url)}.png`}
+                  alt={pokemon.name}
+                />
+              </picture>
+              <div class="flex flex-col px-2 py-1">
+                <span class="text-[85%] text-slate-400/90">
+                  N.°{" "}
+                  {extractIdFromUrl(pokemon.url).toString().padStart(4, "0")}
+                </span>
+                <span class="capitalize text-2xl pt-1 font-semibold">
+                  {pokemon.name}
+                </span>
+                <div class="flex gap-3 pt-1">
+                  {pokemonTypes.map((type) => {
+                    const { class: pillClass, name } = getPillClass(type);
+                    return (
+                      <span
+                        class={`capitalize px-8 rounded text-sm font-semibold ${pillClass}`}
+                      >
+                        {name}
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            </article>
+          );
+        })
+      )
+    ) : (
+      <p>No se encontraron datos</p>
+    )
+  }
+</section>
