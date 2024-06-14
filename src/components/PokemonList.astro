@@ -129,7 +129,7 @@ function getPillClass(type: string): { class: string; name: string } {
 ---
 
 <section
-  class="flex flex-wrap gap-x-8 gap-y-12 justify-center mt-10 py-8 mx-28 animate-fade-up animate-duration-1000 animate-delay-500 animate-ease-in-out"
+  class="grid grid-cols-[repeat(auto-fit,_minmax(180px,_1fr))] sm:grid-cols-[repeat(auto-fit,_minmax(210px,_1fr))] gap-x-8 md:gap-x-8 gap-y-12 lg:max-w-7xl justify-center mt-10 py-8 mx-16 lg:mx-40 animate-fade-up animate-duration-1000 animate-delay-500 animate-ease-in-out"
 >
   {
     pokemonData.length > 0 ? (
@@ -137,17 +137,17 @@ function getPillClass(type: string): { class: string; name: string } {
         pokemonData.map(async (pokemon) => {
           const pokemonTypes = await getPokemonTypes(pokemon);
           return (
-            <article class="transition hover:rotate-2 hover:scale-105 cursor-pointer">
-              <picture class="flex bg-slate-400 dark:bg-slate-800 p-4 rounded-md">
+            <article class="flex flex-col transition hover:rotate-2 hover:scale-105 w-full cursor-pointer">
+              <picture class="flex justify-center bg-slate-400 dark:bg-slate-800 p-2 rounded-lg">
                 <img
                   aria-hidden="true"
                   loading="lazy"
-                  class="size-52 bg-slate-400 dark:bg-slate-800"
+                  class="w-3/5 md:w-4/5 bg-slate-400 dark:bg-slate-800"
                   src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${extractIdFromUrl(pokemon.url)}.png`}
                   alt={pokemon.name}
                 />
               </picture>
-              <div class="flex flex-col px-2 py-1">
+              <div class="flex flex-col px-3 pt-3 sm:pt-2 pb-1">
                 <span class="text-[85%] text-slate-400/90">
                   N.°{" "}
                   {extractIdFromUrl(pokemon.url).toString().padStart(4, "0")}
@@ -155,12 +155,12 @@ function getPillClass(type: string): { class: string; name: string } {
                 <span class="capitalize text-2xl pt-1 font-semibold">
                   {pokemon.name}
                 </span>
-                <div class="flex gap-3 pt-1">
+                <div class="flex gap-5 md:gap-3 pt-1 w-11/12">
                   {pokemonTypes.map((type) => {
                     const { class: pillClass, name } = getPillClass(type);
                     return (
                       <span
-                        class={`capitalize px-8 rounded text-sm font-semibold ${pillClass}`}
+                        class={`capitalize flex justify-center items-center w-1/2 rounded text-sm font-semibold ${pillClass}`}
                       >
                         {name}
                       </span>
