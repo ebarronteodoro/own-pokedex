@@ -129,7 +129,7 @@ function getPillClass(type: string): { class: string; name: string } {
 ---
 
 <section
-  class="flex flex-wrap gap-x-8 gap-y-12 justify-center my-6 px-20 animate-fade-up animate-duration-1000 animate-delay-500 animate-ease-in-out"
+  class="flex flex-wrap gap-x-8 gap-y-12 justify-center mt-10 py-8 mx-20 animate-fade-up animate-duration-1000 animate-delay-500 animate-ease-in-out"
 >
   {
     pokemonData.length > 0 ? (
@@ -137,7 +137,7 @@ function getPillClass(type: string): { class: string; name: string } {
         pokemonData.map(async (pokemon) => {
           const pokemonTypes = await getPokemonTypes(pokemon);
           return (
-            <article class="transition hover:rotate-3 hover:scale-105 cursor-pointer">
+            <article class="transition hover:rotate-2 hover:scale-105 cursor-pointer">
               <picture class="flex bg-slate-400 dark:bg-slate-800 p-4 rounded-md">
                 <img
                   aria-hidden="true"

@@ -23,7 +23,7 @@ import "@fontsource-variable/dosis";
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
   </head>
-  <body class="w-full bg-slate-100 dark:bg-slate-800">
+  <body class="bg-slate-100 dark:bg-slate-800">
     <!-- <Header /> -->
     <main class="w-full">
       <slot />
@@ -35,6 +35,7 @@ import "@fontsource-variable/dosis";
   html {
     font-family: "Dosis Variable", sans-serif;
     color-scheme: light dark;
+    scrollbar-gutter: stable;
   }
 
   body {

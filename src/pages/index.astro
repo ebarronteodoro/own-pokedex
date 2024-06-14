@@ -1,5 +1,6 @@
 ---
 import PokemonList from "../components/PokemonList.astro";
+import SearchBar from "../components/SearchBar.astro";
 import Layout from "../layouts/Layout.astro";
 ---
 
@@ -10,7 +11,15 @@ import Layout from "../layouts/Layout.astro";
     <picture class="flex w-[500px]">
       <img loading="eager" src="../assets/PokeLogo.png" alt="Logo de Pokemon" />
     </picture>
-    <h1 class="text-center">Welcome to my Pokedex</h1>
+    <!-- <p
+      class="text-center mx-0 w-2/5 mt-6 text-pretty text-base text-slate-200/90"
+    >
+      Explora el mundo Pokémon con nuestra completa Pokédex para descubrir
+      detalles sobre tus Pokémon favoritos, incluyendo tipos, habilidades y
+      estadísticas, todo diseñado para enriquecer tu aventura. ¡Sumérgete y
+      explora!
+    </p> -->
   </section>
+  <!-- <SearchBar /> -->
   <PokemonList class="flex justify-center" />
 </Layout>
