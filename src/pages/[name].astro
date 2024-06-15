@@ -1,0 +1,85 @@
+---
+import PokemonList from "../components/PokemonList.astro";
+import Layout from "../layouts/Layout.astro";
+const { name } = Astro.params;
+
+interface Pokemon {
+  name: string;
+  url: string;
+}
+
+interface PokemonResponse {
+  id: number;
+  next: string | null;
+  previous: string | null;
+  results: Pokemon[];
+}
+
+function capitalizeFirstLetter(name: string | undefined): string | undefined {
+  if (!name) return undefined;
+  return name.charAt(0).toUpperCase() + name.slice(1);
+}
+
+async function fetchPokemonList(
+  name: string | undefined
+): Promise<PokemonResponse> {
+  const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
+  const data: PokemonResponse = await response.json();
+  return data;
+}
+
+const pokemonResponse: PokemonResponse = await fetchPokemonList(name);
+const capitalizedName = capitalizeFirstLetter(name);
+
+const infoResponse = await fetch(
+  `https://pokeapi.co/api/v2/pokemon-species/${name}`
+);
+const pokemonInfo = await infoResponse.json();
+const pokeDescription = pokemonInfo.flavor_text_entries.filter(
+  (entry: { language: { name: string } }) => entry.language.name === "es"
+);
+
+console.log(pokemonInfo.varieties);
+pokemonInfo.varieties.map((variety: { pokemon: { name: unknown } }) => {
+  console.log(variety.pokemon.name);
+});
+---
+
+<Layout title={`${capitalizedName} | Pokedex BarronCode`}>
+  <section class="flex flex-col items-center mt-10 mx-16 lg:mx-32">
+    <h1>
+      {capitalizedName}
+      <span>N.° {pokemonResponse.id.toString().padStart(4, "0")}</span>
+    </h1>
+    <div class="h-12 flex items-center">
+      {
+        pokemonInfo.varieties.length > 1 && (
+          <select class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+            {pokemonInfo.varieties.map(
+              (variety: { pokemon: { name: string } }) => (
+                <option>{variety.pokemon.name}</option>
+              )
+            )}
+          </select>
+        )
+      }
+    </div>
+    <div class="flex gap-5">
+      <picture
+        class="flex justify-center bg-slate-400 dark:bg-slate-800 p-2 rounded-lg"
+      >
+        <img
+          aria-hidden="true"
+          loading="lazy"
+          class="size-80 bg-slate-400 dark:bg-slate-800"
+          src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonResponse.id}.png`}
+          alt={name}
+          transition:name={`${name} image`}
+        />
+      </picture>
+      <div class="flex flex-col w-3/5">
+        <p class="text-balance">{pokeDescription[0].flavor_text}</p>
+      </div>
+    </div>
+  </section>
+</Layout>

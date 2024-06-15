@@ -137,38 +137,44 @@ function getPillClass(type: string): { class: string; name: string } {
         pokemonData.map(async (pokemon) => {
           const pokemonTypes = await getPokemonTypes(pokemon);
           return (
-            <article class="flex flex-col transition hover:rotate-2 hover:scale-105 w-full cursor-pointer">
-              <picture class="flex justify-center bg-slate-400 dark:bg-slate-800 p-2 rounded-lg">
-                <img
-                  aria-hidden="true"
-                  loading="lazy"
-                  class="w-3/5 md:w-4/5 bg-slate-400 dark:bg-slate-800"
-                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${extractIdFromUrl(pokemon.url)}.png`}
-                  alt={pokemon.name}
-                />
-              </picture>
-              <div class="flex flex-col px-3 pt-3 sm:pt-2 pb-1">
-                <span class="text-[85%] text-slate-400/90">
-                  N.°{" "}
-                  {extractIdFromUrl(pokemon.url).toString().padStart(4, "0")}
-                </span>
-                <span class="capitalize text-2xl pt-1 font-semibold">
-                  {pokemon.name}
-                </span>
-                <div class="flex gap-5 md:gap-3 pt-1 w-11/12">
-                  {pokemonTypes.map((type) => {
-                    const { class: pillClass, name } = getPillClass(type);
-                    return (
-                      <span
-                        class={`capitalize flex justify-center items-center w-1/2 rounded text-sm font-semibold ${pillClass}`}
-                      >
-                        {name}
-                      </span>
-                    );
-                  })}
+            <a
+              href={`/${pokemon.name}`}
+              class="flex transition hover:rotate-2 hover:scale-105 cursor-pointer active:scale-100"
+            >
+              <article class="flex flex-col w-full">
+                <picture class="flex justify-center bg-slate-400 dark:bg-slate-800 p-2 rounded-lg">
+                  <img
+                    aria-hidden="true"
+                    loading="lazy"
+                    class="w-3/5 md:w-4/5 bg-slate-400 dark:bg-slate-800"
+                    src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${extractIdFromUrl(pokemon.url)}.png`}
+                    alt={pokemon.name}
+                    transition:name={`${pokemon.name} image`}
+                  />
+                </picture>
+                <div class="flex flex-col px-3 pt-3 sm:pt-2 pb-1">
+                  <span class="text-[85%] text-slate-400/90">
+                    N.°{" "}
+                    {extractIdFromUrl(pokemon.url).toString().padStart(4, "0")}
+                  </span>
+                  <span class="capitalize text-2xl pt-1 font-semibold">
+                    {pokemon.name}
+                  </span>
+                  <div class="flex gap-5 md:gap-3 pt-1 w-11/12">
+                    {pokemonTypes.map((type) => {
+                      const { class: pillClass, name } = getPillClass(type);
+                      return (
+                        <span
+                          class={`capitalize flex justify-center items-center w-1/2 rounded text-sm font-semibold ${pillClass}`}
+                        >
+                          {name}
+                        </span>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
-            </article>
+              </article>
+            </a>
           );
         })
       )

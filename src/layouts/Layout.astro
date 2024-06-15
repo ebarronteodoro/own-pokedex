@@ -5,6 +5,7 @@ interface Props {
 
 const { title } = Astro.props;
 import "@fontsource-variable/dosis";
+import { ViewTransitions } from "astro:transitions";
 ---
 
 <!doctype html>
@@ -22,6 +23,7 @@ import "@fontsource-variable/dosis";
     />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+    <ViewTransitions fallback="none" />
   </head>
   <body class="bg-slate-100 dark:bg-slate-800">
     <!-- <Header /> -->
@@ -29,16 +31,16 @@ import "@fontsource-variable/dosis";
       <slot />
     </main>
     <!-- <Footer /> -->
+    <style is:global>
+      html {
+        font-family: "Dosis Variable", sans-serif;
+        color-scheme: light dark;
+        scrollbar-gutter: stable;
+      }
+
+      body {
+        background: url(https://assets.pokemon.com/static2/_ui/img/chrome/container_bg.png);
+      }
+    </style>
   </body>
 </html>
-<style is:global>
-  html {
-    font-family: "Dosis Variable", sans-serif;
-    color-scheme: light dark;
-    scrollbar-gutter: stable;
-  }
-
-  body {
-    background: url(https://assets.pokemon.com/static2/_ui/img/chrome/container_bg.png);
-  }
-</style>
